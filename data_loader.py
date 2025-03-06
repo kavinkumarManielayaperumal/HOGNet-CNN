@@ -8,14 +8,14 @@ class MNIST(Dataset):
     def __init__(self,images,labels,tranformas=None):
         self.images=torch.tensor(images,dtype= torch.float32)
         self.labels=torch.tensor(np.array(labels),dtype=torch.long)
-        self.tranformas=tranformas
+        #self.tranformas=tranformas
     def __len__(self):
         return len(self.images)
-    def __gettiem__(self,idx):
+    def __getitem__(self,idx):
         images=self.images[idx]
         labels=self.labels[idx]
-        if self.tranformas is not None:
-            images=self.tranformas(images)
+        #if self.tranformas is not None:
+            #images=self.tranformas(images)
         return images, labels
 
 def get_loader_hog(images,labels,batch_size=32):
@@ -32,13 +32,13 @@ if __name__=="__main__":
 	labels=load_mnist_labels(train_labels_path)
 	print(f"Iamges shape:{images.shape}")
 	print(f"Labels shape:{labels.shape}")
-hog_features,hog_images=get_hog_features(images)
-print(hog_features.shape)
-print(hog_images.shape)
-data_loader=get_loader_hog(hog_features,labels,batch_size=32)
+	hog_features,hog_images=get_hog_features(images)
+	print(hog_features.shape)
+	print(hog_images.shape)
+	data_loader=get_loader_hog(hog_features,labels,batch_size=32)
 
-for images,labels in data_loader:
-    print(images.shape)
-    print(labels.shape)
-    break
+	for images,labels in data_loader:
+		print(images.shape)
+		print(labels.shape)
+		break
     

@@ -1,8 +1,8 @@
-import torch 
+
 import torch.nn as nn
 from data_loader import get_loader_hog
 from Feature_Extraction import get_hog_features
-from torch.nn.functional import F
+import torch.nn.functional as F
 from for_dataset_view import load_mnist_images,load_mnist_labels
 
 class HOG_INN_Deep(nn.Module):
