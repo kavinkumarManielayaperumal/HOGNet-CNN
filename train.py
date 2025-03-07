@@ -5,6 +5,7 @@ from data_loader import get_loader_hog
 from Feature_Extraction import get_hog_features
 from for_dataset_view import load_mnist_images,load_mnist_labels
 from model import HOG_INN_Deep
+import matplotlib.pyplot as plt
 
 device=torch.device("cuda" if torch.cuda.is_available()else"cpu")
 print(f"Device we are using:{device}")
@@ -13,6 +14,7 @@ def train_model(model,data_loader,number_epochs=5,lr=0.001):
     model.to(device)
     criterion=nn.CrossEntropyLoss()# for the classification problem
     optimizer=optim.Adam(model.parameters(),lr=lr)
+    training_loss=[]
     
     for epoch in range(number_epochs):
         total_loss=0
@@ -25,8 +27,17 @@ def train_model(model,data_loader,number_epochs=5,lr=0.001):
             loss.backward()
             optimizer.step()
             total_loss+=loss.item()
-        if batch_idx%100==0:
-            print(f"Epoch:{epoch}, Batch:{batch_idx}, Loss:{loss.item}")
+        avg_loss=total_loss/len(data_loader)
+        training_loss.append(avg_loss)
+        
+        print(f"Epoch: {epoch}, Batch: {batch_idx}, Loss: {avg_loss:.4f}")# 4f means 4 decimal point 
+    plt.plot(range(1, number_epochs + 1), training_loss, marker='o', linestyle='-')
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.title("Training Loss")
+    plt.grid(True)
+    plt.show()
+        
     save_model(model,file_name="hog_model.pth")
     
     
@@ -52,5 +63,6 @@ if __name__=="__main__":
 	input_size=hog_features.shape[1]
 	number_classes=10
 	model=HOG_INN_Deep(input_size,number_classes)
-	train_model(model,data_loader,number_epochs=40,lr=0.001)
+	train_model(model,data_loader,number_epochs=5,lr=0.001)
 	print("Done")
+	
